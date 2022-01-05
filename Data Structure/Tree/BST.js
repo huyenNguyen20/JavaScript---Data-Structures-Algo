@@ -128,6 +128,59 @@ class BinarySearchTree{
         return null;
 
     }
+    //Breadth First Search
+    //(The search will go from left to right, level by level)
+    breadthFirstSearch(){
+        let currentNode = this.root;
+        let BFSList = [];
+        let queue = []; // To keep track of children of each level from left to right
+        // Initialize the queue;
+        if(!!currentNode) queue.push(currentNode);
+        let i = 0;
+        while(queue.length > 0){
+            currentNode = queue.shift();
+            BFSList.push(currentNode.value);
+            if(!!currentNode.left) queue.push(currentNode.left);
+            if(!!currentNode.right) queue.push(currentNode.right);
+        }
+        return BFSList;
+    }
+    breadthFirstSearchRecursively(){
+        if(!!this.root) {
+            let queue = [this.root];
+            let list = [];
+            this.breadthFirstSearchRecursivelyHelper(queue, list);
+            return list;
+        }
+        return [];
+    }
+    breadthFirstSearchRecursivelyHelper(queue, list){
+        if(queue.length > 0){
+            let currentNode = queue.shift();
+            list.push(currentNode.value); 
+            if(!!currentNode.left) queue.push(currentNode.left);
+            if(!!currentNode.right) queue.push(currentNode.right);
+            return this.breadthFirstSearchRecursivelyHelper(queue, list);
+        }
+    }
+    //Depth First Search
+    //(The search will goes down one branch of the tree each time, and all the way to the leaf nodes)
+    depthFirstSearch(){
+        let list = [];
+        if(!!this.root){
+            this.depthFirstSearchRecursively(this.root,list);
+        }
+        return list;
+    }
+    depthFirstSearchRecursively(node, list){
+        if(!!node){
+            //list.push(node.value); // Pre-order - Record the node in the order of traversal
+            if(!!node.left)this.depthFirstSearchRecursively(node.left,list);
+            list.push(node.value) // In-order - Record the node only after the left-most branch get exhausted
+            if(!!node.right)this.depthFirstSearchRecursively(node.right,list);
+            //list.push(node.value) // Post-order - Record the node only after the right-most branch get exhausted
+        }
+    }
 }
 
 function traverse(node){
@@ -142,14 +195,29 @@ function traverse(node){
 const tree = new BinarySearchTree();
 tree.insert(9);
 tree.insert(4);
-tree.insert(7);
-tree.insert(20);
-tree.insert(170);
-tree.insert(180);
-tree.insert(15);
 tree.insert(1);
+tree.insert(7);
 tree.insert(5);
 tree.insert(6);
-console.log(JSON.stringify(traverse(tree.root)));
-tree.remove(9);
-console.log(JSON.stringify(traverse(tree.root)));
+tree.insert(20);
+tree.insert(15);
+tree.insert(170);
+tree.insert(180);
+// console.log(JSON.stringify(traverse(tree.root)));
+// tree.remove(9);
+// console.log(JSON.stringify(traverse(tree.root)));
+// const result1 = tree.breadthFirstSearch();
+// const result2 = tree.breadthFirstSearchRecursively();
+// console.log(result1);
+// console.log(result2);
+const result3 = tree.depthFirstSearch();
+console.log(result3);
+
+// Depth Search First
+//     9
+//  4     20
+//1  6  15  170
+//In-Order: [1,  4, 6, 9, 15, 20, 170]
+//Pre-Order: [9, 4, 1, 6, 20, 15, 170]
+//Post-Order: [1,  6, 4, 15, 170, 20, 9]
+
